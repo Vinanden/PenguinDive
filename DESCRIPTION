@@ -1,0 +1,32 @@
+Package: PenguinDive
+Type: Package
+Title: Interactive Dashboard to dive into the Palmer Penguins Dataset
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Anders", "Birkelid", "Vindenes",
+      email = "anvin5723@uib.no",
+      role = c("aut", "cre")
+    )
+  )
+Description: An interactive Shiny dashboard for diving into the Palmer penguins dataset,
+    aimed at teaching basic statistical concepts and ecological data exploration.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.5)
+Suggests: 
+    testthat (>= 3.0.0),
+    palmerpenguins
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports:
+    shiny,
+    bslib,
+    plotly,
+    ggplot2,
+    dplyr,
+    stats,
+    htmltools

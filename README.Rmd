@@ -1,0 +1,43 @@
+---
+output: github_document
+always_allow_html: true
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# PenguinDive
+
+The goal of PenguinDive is to dive into the Palmer penguins dataset,
+    aimed at teaching basic statistical concepts and ecological data exploration.
+
+## Installation
+
+You can install the development version of PenguinDive like so:
+
+```{r, eval=FALSE}
+# install.packages("pak")
+# pak::pak("Vinanden/PenguinDive")
+
+# or
+
+# install.packages("remotes")
+# remotes::install_github("Vinanden/penguinDive")
+```
+
+## Example
+
+You can launch the PenguinDive app with:
+
+```{r example, eval=FALSE}
+library(PenguinDive)
+run_app()
+```
