@@ -3,8 +3,8 @@
 
 # PenguinDive
 
-The goal of PenguinDive is to dive into the Palmer penguins dataset,
-aiming to teach basic statistical concepts and ecological data
+The goal of the PenguinDive package is to dive into the Palmer penguins
+dataset, aiming to teach basic statistical concepts and ecological data
 exploration.
 
 ## Installation
