@@ -9,7 +9,7 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: An interactive Shiny dashboard for diving into the Palmer penguins dataset,
+Description: An interactive Shiny appliccation for diving into the Palmer penguins dataset,
     aimed at teaching basic statistical concepts and ecological data exploration.
 License: MIT + file LICENSE
 Encoding: UTF-8

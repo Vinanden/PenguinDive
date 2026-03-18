@@ -33,7 +33,7 @@ You can install the development version of PenguinDive like so:
 # remotes::install_github("Vinanden/PenguinDive")
 ```
 
-## Example
+## Launching
 
 You can launch the PenguinDive app with:
 
