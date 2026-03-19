@@ -26,15 +26,31 @@ app_server <- function(input, output, session) {
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
-    p <- ggplot(df, aes_string(input$xvar, input$yvar, color = "species")) +
+    # Lookup table for pretty labels
+    pretty_names <- c(
+      bill_length_mm     = "Bill length (mm)",
+      bill_depth_mm      = "Bill depth (mm)",
+      flipper_length_mm  = "Flipper length (mm)",
+      body_mass_g        = "Body mass (g)"
+    )
+
+    # Convert pretty label back to raw variable name
+    xvar <- names(pretty_names)[pretty_names == input$xvar]
+    yvar <- names(pretty_names)[pretty_names == input$yvar]
+
+    p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
+      labs(
+        x = input$xvar,   # pretty label
+        y = input$yvar    # pretty label
+      ) +
       theme_bw(base_size = 16)
 
     if (input$facet != "None") {
       p <- p + facet_wrap(as.formula(paste("~", input$facet)))
     }
 
-    plotly::ggplotly(p, tooltip = c("species", input$xvar, input$yvar))
+    plotly::ggplotly(p, tooltip = c("species", xvar, yvar))
   })
 
   # ---- Summary table ----
