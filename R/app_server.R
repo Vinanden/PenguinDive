@@ -2,7 +2,7 @@
 #'
 #' @importFrom stats as.formula cor lm
 #' @importFrom dplyr filter group_by summarise across where
-#' @importFrom ggplot2 ggplot aes_string geom_point facet_wrap theme_bw theme_set
+#' @importFrom ggplot2 ggplot aes_string geom_point facet_wrap theme_bw theme_set labs
 #' @importFrom shiny renderUI renderTable renderPrint renderText reactive
 #' @importFrom htmltools tags
 #' @noRd
