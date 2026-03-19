@@ -5,22 +5,27 @@
 #' @noRd
 app_ui <- function() {
   penguins <- PenguinDive::penguins
+
+  # Pretty labels for numeric variables
   pretty_names <- c(
     bill_length_mm     = "Bill length (mm)",
     bill_depth_mm      = "Bill depth (mm)",
     flipper_length_mm  = "Flipper length (mm)",
     body_mass_g        = "Body mass (g)"
   )
+
   page_navbar(
     title = "Palmer Penguins Dashboard",
+
+    # ---------------- Explorer ----------------
     nav_panel(
       "Explorer",
       layout_sidebar(
         sidebar = sidebar(
           selectInput("species", "Species", choices = c("All", unique(penguins$species))),
           selectInput("facet", "Facet by", choices = c("None", "island", "sex")),
-          selectInput("xvar", "X variable", choices = names(penguins)[3:6]),
-          selectInput("yvar", "Y variable", choices = names(penguins)[3:6])
+          selectInput("xvar", "X variable", choices = pretty_names),
+          selectInput("yvar", "Y variable", choices = pretty_names)
         ),
         card(
           plotlyOutput("scatter"),
@@ -28,6 +33,8 @@ app_ui <- function() {
         )
       )
     ),
+
+    # ---------------- Species Profiles ----------------
     nav_panel(
       "Species Profiles",
       layout_columns(
@@ -43,13 +50,15 @@ app_ui <- function() {
         )
       )
     ),
+
+    # ---------------- Statistics ----------------
     nav_panel(
       "Statistics",
       layout_sidebar(
         sidebar = sidebar(
           selectInput("reg_species", "Species", choices = c("All", unique(penguins$species))),
-          selectInput("xvar", "X variable", choices = pretty_names)
-          selectInput("yvar", "Y variable", choices = pretty_names)
+          selectInput("reg_x", "Predictor (X)", choices = pretty_names),
+          selectInput("reg_y", "Response (Y)", choices = pretty_names)
         ),
         card(
           h3("Regression results"),
