@@ -40,7 +40,10 @@ app_server <- function(input, output, session) {
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
-    df$sex <- dplyr::recode(df$sex, "male" = "Male", "female" = "Female") # Fix sex labels
+    df$sex <- dplyr::recode(df$sex,
+                            "male" = "Male",
+                            "female" = "Female",
+                            .default = "Unknown")
 
     xvar <- input$xvar
     yvar <- input$yvar
