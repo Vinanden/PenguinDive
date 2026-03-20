@@ -40,17 +40,24 @@ app_server <- function(input, output, session) {
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
-    xvar <- input$xvar      # raw column name
-    yvar <- input$yvar      # raw column name
+    # Raw variable names from UI
+    xvar <- input$xvar
+    yvar <- input$yvar
 
-    # Capitalized Species for tooltip
-    df$Species <- df$species
+    # Pretty labels for axes and tooltip
+    xlab <- axis_labels[[xvar]]
+    ylab <- axis_labels[[yvar]]
+
+    # Add pretty columns for tooltip
+    df$SpeciesPretty <- df$species
+    df[[xlab]] <- df[[xvar]]
+    df[[ylab]] <- df[[yvar]]
 
     p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
       labs(
-        x = axis_labels[[xvar]],
-        y = axis_labels[[yvar]],
+        x = xlab,
+        y = ylab,
         color = "Species"
       ) +
       theme_bw(base_size = 16)
@@ -61,7 +68,7 @@ app_server <- function(input, output, session) {
 
     plotly::ggplotly(
       p,
-      tooltip = c("Species", xvar, yvar)
+      tooltip = c("SpeciesPretty", xlab, ylab)
     )
   })
 
