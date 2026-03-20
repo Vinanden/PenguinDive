@@ -45,40 +45,22 @@ app_ui <- function() {
           selectInput("yvar", "Y variable", choices = numeric_choices)
         ),
         card(
-          plotlyOutput("scatter"),
-          div(
-            style = "margin-top: -0.5rem; margin-bottom: 0.1rem;",
-            h4(
-              "Mean measurements by species",
-              style = "
-                font-size: 1.10rem;
-                font-weight: 600;
-                margin: 0;
-              "
-            )
-          ),
-          tableOutput("summary")
+          plotlyOutput("scatter")
         )
       )
     ),
 
 # Species Profiles
-    nav_panel(
-      "Species Profiles",
-      layout_columns(
-        col_widths = c(4, 8),
-        card(
-          h3("Species"),
-          selectInput("species_profile", "Choose species",
-                      choices = species_choices[species_choices != "All"]),
-          uiOutput("penguin_image")
-        ),
-        card(
-          h3("Summary statistics"),
-          tableOutput("profile_stats")
-        )
-      )
-    ),
+nav_panel(
+  "Species Profiles",
+  layout_columns(
+    col_widths = c(12),
+    card(
+      h3("Mean measurements by species"),
+      tableOutput("profile_stats")
+    )
+  )
+)
 
 # Statistics
     nav_panel(

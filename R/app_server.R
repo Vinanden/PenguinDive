@@ -79,17 +79,6 @@ app_server <- function(input, output, session) {
     )
   })
 
-# Summary table
-  output$summary <- renderTable({
-    df <- penguins_filtered() |>
-      dplyr::select(-year) |>
-      dplyr::group_by(species) |>
-      dplyr::summarise(dplyr::across(where(is.numeric), mean, na.rm = TRUE))
-
-    names(df) <- dplyr::recode(names(df), !!!pretty_names)
-    df
-  })
-
 # Species profile image
   output$penguin_image <- renderUI({
     species <- input$species_profile
@@ -100,8 +89,8 @@ app_server <- function(input, output, session) {
 # Species profile stats
   output$profile_stats <- renderTable({
     df <- penguins |>
-      dplyr::filter(species == input$species_profile) |>
       dplyr::select(-year) |>
+      dplyr::group_by(species) |>
       dplyr::summarise(dplyr::across(where(is.numeric), mean, na.rm = TRUE))
 
     names(df) <- dplyr::recode(names(df), !!!pretty_names)
