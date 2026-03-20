@@ -46,7 +46,15 @@ app_ui <- function() {
         ),
         card(
           plotlyOutput("scatter"),
-          h4("Mean measurements by species"),
+          h4(
+            "Mean measurements by species",
+            style = "
+              font-size: 0.95rem;
+              font-weight: 500;
+              margin-top: 1.5rem;
+              margin-bottom: 0.3rem;
+            "
+          ),
           tableOutput("summary")
         )
       )
