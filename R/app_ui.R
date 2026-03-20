@@ -23,7 +23,7 @@ app_ui <- function() {
   )
 
   # Species labels (pretty → raw)
-  species_raw <- sort(unique(penguins$species))
+  species_raw <- sort(unique(as.character(penguins$species)))
   species_choices <- setNames(
     c("All", species_raw),
     c("All", tools::toTitleCase(species_raw))
