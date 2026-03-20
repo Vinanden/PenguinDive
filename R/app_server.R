@@ -49,6 +49,13 @@ app_server <- function(input, output, session) {
 
     p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
+      scale_color_manual(
+        values = c(
+          "Chinstrap" = "#8E5BA6",
+          "Gentoo"    = "#3BB6A0",
+          "Adelie"    = "#F4A259"
+        )
+      ) +
       labs(
         x = axis_labels[[xvar]],
         y = axis_labels[[yvar]],
