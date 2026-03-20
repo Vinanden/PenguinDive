@@ -34,7 +34,7 @@ app_ui <- function() {
   page_navbar(
     title = "Palmer Penguins Dashboard",
 
-    # ---------------- Explorer ----------------
+# Explorer
     nav_panel(
       "Explorer",
       layout_sidebar(
@@ -49,10 +49,10 @@ app_ui <- function() {
           h4(
             "Mean measurements by species",
             style = "
-              font-size: 1.00rem;
-              font-weight: 700;   /* bold */
-              margin-top: 0.8rem;
-              margin-bottom: 0.2rem;
+              font-size: 1.10rem;
+              font-weight: 600;
+              margin-top: 0.7rem;
+              margin-bottom: 0.1rem;
             "
           ),
           tableOutput("summary")
@@ -60,7 +60,7 @@ app_ui <- function() {
       )
     ),
 
-    # ---------------- Species Profiles ----------------
+# Species Profiles
     nav_panel(
       "Species Profiles",
       layout_columns(
@@ -78,7 +78,7 @@ app_ui <- function() {
       )
     ),
 
-    # ---------------- Statistics ----------------
+# Statistics
     nav_panel(
       "Statistics",
       layout_sidebar(

@@ -36,7 +36,7 @@ app_server <- function(input, output, session) {
     if (input$species == "All") penguins else penguins |> dplyr::filter(species == input$species)
   })
 
-  # ---- Scatterplot (interactive) ----
+# Scatterplot (interactive)
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
@@ -64,7 +64,7 @@ app_server <- function(input, output, session) {
     )
   })
 
-  # ---- Summary table ----
+# Summary table
   output$summary <- renderTable({
     df <- penguins_filtered() |>
       dplyr::select(-year) |>
@@ -75,14 +75,14 @@ app_server <- function(input, output, session) {
     df
   })
 
-  # ---- Species profile image ----
+# Species profile image
   output$penguin_image <- renderUI({
     species <- input$species_profile
     img_src <- penguin_images[[species]]
     tags$img(src = img_src, width = "100%")
   })
 
-  # ---- Species profile stats ----
+# Species profile stats
   output$profile_stats <- renderTable({
     df <- penguins |>
       dplyr::filter(species == input$species_profile) |>
@@ -93,7 +93,7 @@ app_server <- function(input, output, session) {
     df
   })
 
-  # ---- Regression ----
+# Regression
   output$regression <- renderPrint({
     df <- penguins
     if (input$reg_species != "All") {
@@ -108,7 +108,7 @@ app_server <- function(input, output, session) {
     summary(model)
   })
 
-  # ---- Correlation ----
+# Correlation
   output$correlation <- renderText({
     df <- penguins
     if (input$reg_species != "All") {
