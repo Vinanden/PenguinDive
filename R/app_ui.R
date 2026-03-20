@@ -7,23 +7,23 @@ app_ui <- function() {
 
   penguins <- PenguinDive::penguins
 
-  # Raw numeric vars and pretty labels (UI)
+# Raw numeric vars and pretty labels (UI)
   numeric_vars <- c("bill_length_mm", "bill_depth_mm",
                     "flipper_length_mm", "body_mass_g")
   numeric_labels <- c("Bill length (mm)", "Bill depth (mm)",
                       "Flipper length (mm)", "Body mass (g)")
 
-  # Choices: names = pretty, values = raw
+# Choices: names = pretty, values = raw
   numeric_choices <- setNames(numeric_vars, numeric_labels)
 
-  # Facet labels (pretty → raw)
+# Facet labels (pretty → raw)
   facet_choices <- c(
     "None"   = "None",
     "Island" = "island",
     "Sex"    = "sex"
   )
 
-  # Species labels (pretty → raw)
+# Species labels (pretty → raw)
   species_raw <- sort(unique(as.character(penguins$species)))
   species_choices <- c("All" = "All")
   species_choices <- c(
@@ -55,6 +55,19 @@ nav_panel(
   "Species Profiles",
   layout_columns(
     col_widths = c(12),
+
+    # Row of species images
+    card(
+      h3("Species"),
+      layout_columns(
+        col_widths = c(4, 4, 4),
+        uiOutput("img_Adelie"),
+        uiOutput("img_Gentoo"),
+        uiOutput("img_Chinstrap")
+      )
+    ),
+
+    # Table of mean measurements
     card(
       h3("Mean measurements by species"),
       tableOutput("profile_stats")

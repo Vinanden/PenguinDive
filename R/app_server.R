@@ -25,13 +25,20 @@ app_server <- function(input, output, session) {
     axis_labels
   )
 
-  penguin_images <- list(
-    Adelie    = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png",
-    Gentoo    = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png",
-    Chinstrap = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png"
-  )
+# Penguin images
+  output$img_Adelie <- renderUI({
+    tags$img(src = penguin_images[["Adelie"]], width = "100%")
+  })
 
-  # ---- Reactive filtered data ----
+  output$img_Gentoo <- renderUI({
+    tags$img(src = penguin_images[["Gentoo"]], width = "100%")
+  })
+
+  output$img_Chinstrap <- renderUI({
+    tags$img(src = penguin_images[["Chinstrap"]], width = "100%")
+  })
+
+# Reactive filtered data
   penguins_filtered <- reactive({
     if (input$species == "All") penguins else penguins |> dplyr::filter(species == input$species)
   })
