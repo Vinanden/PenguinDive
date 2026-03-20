@@ -60,7 +60,7 @@ nav_panel(
       tableOutput("profile_stats")
     )
   )
-)
+),
 
 # Statistics
     nav_panel(
