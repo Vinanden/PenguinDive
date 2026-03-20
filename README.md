@@ -27,5 +27,5 @@ You can launch the PenguinDive app with:
 
 ``` r
 library(PenguinDive)
-run_app()
+PenguinDive::run_app()
 ```

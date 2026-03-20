@@ -12,13 +12,17 @@ app_server <- function(input, output, session) {
 
   theme_set(theme_bw(base_size = 16))
 
-  # Pretty labels for renaming columns and axes (server only)
-  pretty_names <- c(
-    species            = "Species",
+  # Pretty labels for renaming columns and axes (server)
+  axis_labels <- c(
     bill_length_mm     = "Bill length (mm)",
     bill_depth_mm      = "Bill depth (mm)",
     flipper_length_mm  = "Flipper length (mm)",
     body_mass_g        = "Body mass (g)"
+  )
+
+  pretty_names <- c(
+    species            = "Species",
+    axis_labels
   )
 
   penguin_images <- list(
@@ -27,7 +31,7 @@ app_server <- function(input, output, session) {
     Chinstrap = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png"
   )
 
-# Reactive filtered data
+  # ---- Reactive filtered data ----
   penguins_filtered <- reactive({
     if (input$species == "All") penguins else penguins |> dplyr::filter(species == input$species)
   })
@@ -36,19 +40,18 @@ app_server <- function(input, output, session) {
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
-    # Convert pretty label back to raw variable name
-    xvar <- names(pretty_names)[pretty_names == input$xvar]
-    yvar <- names(pretty_names)[pretty_names == input$yvar]
+    xvar <- input$xvar      # raw column name
+    yvar <- input$yvar      # raw column name
 
-    # Add a capitalized Species column for tooltips
+    # Capitalized Species for tooltip
     df$Species <- df$species
 
     p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
       labs(
-        x = input$xvar,
-        y = input$yvar,
-        color = "Species"   # Legend title fix
+        x = axis_labels[[xvar]],
+        y = axis_labels[[yvar]],
+        color = "Species"
       ) +
       theme_bw(base_size = 16)
 
@@ -58,14 +61,14 @@ app_server <- function(input, output, session) {
 
     plotly::ggplotly(
       p,
-      tooltip = c("Species", xvar, yvar)   # Tooltip fix
+      tooltip = c("Species", xvar, yvar)
     )
   })
 
-# Summary table
+  # ---- Summary table ----
   output$summary <- renderTable({
     df <- penguins_filtered() |>
-      dplyr::select(-year) |>   # hide year
+      dplyr::select(-year) |>
       dplyr::group_by(species) |>
       dplyr::summarise(dplyr::across(where(is.numeric), mean, na.rm = TRUE))
 
@@ -73,48 +76,48 @@ app_server <- function(input, output, session) {
     df
   })
 
-# Species profile image
+  # ---- Species profile image ----
   output$penguin_image <- renderUI({
     species <- input$species_profile
     img_src <- penguin_images[[species]]
     tags$img(src = img_src, width = "100%")
   })
 
-# Species profile stats
+  # ---- Species profile stats ----
   output$profile_stats <- renderTable({
     df <- penguins |>
       dplyr::filter(species == input$species_profile) |>
-      dplyr::select(-year) |>   # hide year
+      dplyr::select(-year) |>
       dplyr::summarise(dplyr::across(where(is.numeric), mean, na.rm = TRUE))
 
     names(df) <- dplyr::recode(names(df), !!!pretty_names)
     df
   })
 
-# Regression
+  # ---- Regression ----
   output$regression <- renderPrint({
     df <- penguins
     if (input$reg_species != "All") {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
-    reg_x <- names(pretty_names)[pretty_names == input$reg_x]
-    reg_y <- names(pretty_names)[pretty_names == input$reg_y]
+    reg_x <- input$reg_x
+    reg_y <- input$reg_y
 
     lm_formula <- as.formula(paste(reg_y, "~", reg_x))
     model <- lm(lm_formula, data = df)
     summary(model)
   })
 
-# Correlation
+  # ---- Correlation ----
   output$correlation <- renderText({
     df <- penguins
     if (input$reg_species != "All") {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
-    reg_x <- names(pretty_names)[pretty_names == input$reg_x]
-    reg_y <- names(pretty_names)[pretty_names == input$reg_y]
+    reg_x <- input$reg_x
+    reg_y <- input$reg_y
 
     cor_val <- cor(df[[reg_x]], df[[reg_y]], use = "complete.obs")
     paste("Correlation:", round(cor_val, 3))
