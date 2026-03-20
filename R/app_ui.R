@@ -54,7 +54,7 @@ app_ui <- function() {
 nav_panel(
   "Species Profiles",
   layout_columns(
-    col_widths = c(4, 8),   # 4/12 for image, 8/12 for table
+    col_widths = c(4, 8),
 
     # Left column: image
     card(
@@ -70,13 +70,6 @@ nav_panel(
   )
 ),
 
-# Table of mean measurements
-    card(
-      h3("Mean measurements by species"),
-      tableOutput("profile_stats")
-    )
-  )
-),
 
 # Statistics
     nav_panel(
