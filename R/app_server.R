@@ -40,10 +40,9 @@ app_server <- function(input, output, session) {
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
-    xvar <- input$xvar      # raw column name
-    yvar <- input$yvar      # raw column name
+    xvar <- input$xvar
+    yvar <- input$yvar
 
-    # Capitalized Species for tooltip
     df$Species <- df$species
 
     p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
