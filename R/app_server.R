@@ -43,7 +43,7 @@ app_server <- function(input, output, session) {
     df$sex <- dplyr::recode(df$sex,
                             "male" = "Male",
                             "female" = "Female",
-                            .default = "Unknown")
+                            .missing = "Unknown")
 
     xvar <- input$xvar
     yvar <- input$yvar
