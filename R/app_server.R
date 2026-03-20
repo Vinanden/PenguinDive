@@ -12,7 +12,7 @@ app_server <- function(input, output, session) {
 
   theme_set(theme_bw(base_size = 16))
 
-  # Pretty labels for renaming columns and axes (server)
+# Pretty labels for renaming columns and axes (server)
   axis_labels <- c(
     bill_length_mm     = "Bill length (mm)",
     bill_depth_mm      = "Bill depth (mm)",
@@ -26,17 +26,16 @@ app_server <- function(input, output, session) {
   )
 
 # Penguin images
-  output$img_Adelie <- renderUI({
-    tags$img(src = penguin_images[["Adelie"]], width = "100%")
-  })
+  penguin_images <- list(
+    Adelie    = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png",
+    Gentoo    = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png",
+    Chinstrap = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png"
+  )
 
-  output$img_Gentoo <- renderUI({
-    tags$img(src = penguin_images[["Gentoo"]], width = "100%")
-  })
-
-  output$img_Chinstrap <- renderUI({
-    tags$img(src = penguin_images[["Chinstrap"]], width = "100%")
-  })
+  # Image outputs
+  output$img_Adelie <- renderUI({tags$img(src = penguin_images[["Adelie"]], width = "100%")})
+  output$img_Gentoo <- renderUI({tags$img(src = penguin_images[["Gentoo"]], width = "100%")})
+  output$img_Chinstrap <- renderUI({tags$img(src = penguin_images[["Chinstrap"]], width = "100%")})
 
 # Reactive filtered data
   penguins_filtered <- reactive({
@@ -84,13 +83,6 @@ app_server <- function(input, output, session) {
       p,
       tooltip = c("Species", xvar, yvar)
     )
-  })
-
-# Species profile image
-  output$penguin_image <- renderUI({
-    species <- input$species_profile
-    img_src <- penguin_images[[species]]
-    tags$img(src = img_src, width = "100%")
   })
 
 # Species profile stats
