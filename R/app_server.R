@@ -2,9 +2,9 @@
 #'
 #' @importFrom stats as.formula cor lm
 #' @importFrom dplyr filter group_by summarise across where recode select
-#' @importFrom ggplot2 ggplot aes_string geom_point facet_wrap theme_bw theme_set labs
 #' @importFrom shiny renderUI renderTable renderPrint renderText reactive
 #' @importFrom htmltools tags
+#' @import ggplot2
 #' @noRd
 app_server <- function(input, output, session) {
 
