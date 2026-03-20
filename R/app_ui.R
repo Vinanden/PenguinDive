@@ -49,10 +49,10 @@ app_ui <- function() {
           h4(
             "Mean measurements by species",
             style = "
-              font-size: 0.95rem;
-              font-weight: 500;
-              margin-top: 1.5rem;
-              margin-bottom: 0.3rem;
+              font-size: 1.00rem;
+              font-weight: 700;   /* bold */
+              margin-top: 0.8rem;
+              margin-bottom: 0.2rem;
             "
           ),
           tableOutput("summary")
