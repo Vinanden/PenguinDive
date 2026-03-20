@@ -2,7 +2,7 @@
 #'
 #' @importFrom stats as.formula cor lm
 #' @importFrom dplyr filter group_by summarise across where recode select
-#' @importFrom ggplot2 ggplot aes_string geom_point facet_wrap theme_bw theme_set labs
+#' @importFrom ggplot2 ggplot aes geom_point facet_wrap theme_bw theme_set labs
 #' @importFrom shiny renderUI renderTable renderPrint renderText reactive
 #' @importFrom htmltools tags
 #' @noRd
@@ -40,20 +40,20 @@ app_server <- function(input, output, session) {
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
-    # Raw variable names from UI
+    # Raw variable names
     xvar <- input$xvar
     yvar <- input$yvar
 
-    # Pretty labels for axes and tooltip
+    # Pretty labels
     xlab <- axis_labels[[xvar]]
     ylab <- axis_labels[[yvar]]
 
-    # Add pretty columns for tooltip
-    df$SpeciesPretty <- df$species
-    df[[xlab]] <- df[[xvar]]
-    df[[ylab]] <- df[[yvar]]
+    # Add stable pretty columns for tooltip
+    df$Species <- df$species
+    df$Xpretty <- df[[xvar]]
+    df$Ypretty <- df[[yvar]]
 
-    p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
+    p <- ggplot(df, aes(.data[[xvar]], .data[[yvar]], color = species)) +
       geom_point(size = 3, alpha = 0.8) +
       labs(
         x = xlab,
@@ -68,7 +68,7 @@ app_server <- function(input, output, session) {
 
     plotly::ggplotly(
       p,
-      tooltip = c("SpeciesPretty", xlab, ylab)
+      tooltip = c("Species", "Xpretty", "Ypretty")
     )
   })
 
