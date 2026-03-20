@@ -51,8 +51,8 @@ app_ui <- function() {
             h4(
               "Mean measurements by species",
               style = "
-                font-size: 1.00rem;
-                font-weight: 700;
+                font-size: 1.10rem;
+                font-weight: 600;
                 margin: 0;
               "
             )
