@@ -1,5 +1,5 @@
 #' @importFrom shiny selectInput plotOutput tableOutput verbatimTextOutput textOutput uiOutput
-#' @importFrom htmltools h3 h4
+#' @importFrom htmltools h3 h4 div
 #' @import bslib
 #' @import plotly
 #' @noRd
