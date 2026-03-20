@@ -12,7 +12,7 @@ app_server <- function(input, output, session) {
 
   theme_set(theme_bw(base_size = 16))
 
-  # Pretty labels for renaming columns and axes
+  # Pretty labels for renaming columns and axes (server only)
   pretty_names <- c(
     species            = "Species",
     bill_length_mm     = "Bill length (mm)",
@@ -27,7 +27,7 @@ app_server <- function(input, output, session) {
     Chinstrap = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png"
   )
 
-  # ---- Reactive filtered data ----
+# Reactive filtered data
   penguins_filtered <- reactive({
     if (input$species == "All") penguins else penguins |> dplyr::filter(species == input$species)
   })
@@ -40,12 +40,15 @@ app_server <- function(input, output, session) {
     xvar <- names(pretty_names)[pretty_names == input$xvar]
     yvar <- names(pretty_names)[pretty_names == input$yvar]
 
+    # Add a capitalized Species column for tooltips
+    df$Species <- df$species
+
     p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
       labs(
         x = input$xvar,
         y = input$yvar,
-        color = "Species"
+        color = "Species"   # Legend title fix
       ) +
       theme_bw(base_size = 16)
 
@@ -53,10 +56,13 @@ app_server <- function(input, output, session) {
       p <- p + facet_wrap(as.formula(paste("~", input$facet)))
     }
 
-    plotly::ggplotly(p, tooltip = c("species", xvar, yvar))
+    plotly::ggplotly(
+      p,
+      tooltip = c("Species", xvar, yvar)   # Tooltip fix
+    )
   })
 
-  # ---- Summary table ----
+# Summary table
   output$summary <- renderTable({
     df <- penguins_filtered() |>
       dplyr::select(-year) |>   # hide year
@@ -67,14 +73,14 @@ app_server <- function(input, output, session) {
     df
   })
 
-  # ---- Species profile image ----
+# Species profile image
   output$penguin_image <- renderUI({
     species <- input$species_profile
     img_src <- penguin_images[[species]]
     tags$img(src = img_src, width = "100%")
   })
 
-  # ---- Species profile stats ----
+# Species profile stats
   output$profile_stats <- renderTable({
     df <- penguins |>
       dplyr::filter(species == input$species_profile) |>
@@ -85,7 +91,7 @@ app_server <- function(input, output, session) {
     df
   })
 
-  # ---- Regression ----
+# Regression
   output$regression <- renderPrint({
     df <- penguins
     if (input$reg_species != "All") {
@@ -100,7 +106,7 @@ app_server <- function(input, output, session) {
     summary(model)
   })
 
-  # ---- Correlation ----
+# Correlation
   output$correlation <- renderText({
     df <- penguins
     if (input$reg_species != "All") {
