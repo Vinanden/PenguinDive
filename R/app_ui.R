@@ -4,6 +4,7 @@
 #' @import plotly
 #' @noRd
 app_ui <- function() {
+
   penguins <- PenguinDive::penguins
 
   # Pretty labels for numeric variables
@@ -14,6 +15,20 @@ app_ui <- function() {
     body_mass_g        = "Body mass (g)"
   )
 
+  # Facet labels (pretty → raw)
+  facet_choices <- c(
+    "None"   = "None",
+    "Island" = "island",
+    "Sex"    = "sex"
+  )
+
+  # Species labels (pretty → raw)
+  species_raw <- sort(unique(penguins$species))
+  species_choices <- setNames(
+    c("All", species_raw),
+    c("All", tools::toTitleCase(species_raw))
+  )
+
   page_navbar(
     title = "Palmer Penguins Dashboard",
 
@@ -22,8 +37,8 @@ app_ui <- function() {
       "Explorer",
       layout_sidebar(
         sidebar = sidebar(
-          selectInput("species", "Species", choices = c("All", unique(penguins$species))),
-          selectInput("facet", "Facet by", choices = c("None", "island", "sex")),
+          selectInput("species", "Species", choices = species_choices),
+          selectInput("facet", "Facet by", choices = facet_choices),
           selectInput("xvar", "X variable", choices = pretty_names),
           selectInput("yvar", "Y variable", choices = pretty_names)
         ),
@@ -41,7 +56,7 @@ app_ui <- function() {
         col_widths = c(4, 8),
         card(
           h3("Species"),
-          selectInput("species_profile", "Choose species", unique(penguins$species)),
+          selectInput("species_profile", "Choose species", choices = species_choices[-1]),
           uiOutput("penguin_image")
         ),
         card(
@@ -56,7 +71,7 @@ app_ui <- function() {
       "Statistics",
       layout_sidebar(
         sidebar = sidebar(
-          selectInput("reg_species", "Species", choices = c("All", unique(penguins$species))),
+          selectInput("reg_species", "Species", choices = species_choices),
           selectInput("reg_x", "Predictor (X)", choices = pretty_names),
           selectInput("reg_y", "Response (Y)", choices = pretty_names)
         ),

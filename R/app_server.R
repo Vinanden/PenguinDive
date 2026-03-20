@@ -1,15 +1,25 @@
 #' Application server logic
 #'
 #' @importFrom stats as.formula cor lm
-#' @importFrom dplyr filter group_by summarise across where
+#' @importFrom dplyr filter group_by summarise across where recode select
 #' @importFrom ggplot2 ggplot aes_string geom_point facet_wrap theme_bw theme_set labs
 #' @importFrom shiny renderUI renderTable renderPrint renderText reactive
 #' @importFrom htmltools tags
 #' @noRd
 app_server <- function(input, output, session) {
+
   penguins <- PenguinDive::penguins
 
   theme_set(theme_bw(base_size = 16))
+
+  # Pretty labels for renaming columns and axes
+  pretty_names <- c(
+    species            = "Species",
+    bill_length_mm     = "Bill length (mm)",
+    bill_depth_mm      = "Bill depth (mm)",
+    flipper_length_mm  = "Flipper length (mm)",
+    body_mass_g        = "Body mass (g)"
+  )
 
   penguin_images <- list(
     Adelie    = "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png",
@@ -26,14 +36,6 @@ app_server <- function(input, output, session) {
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
-    # Lookup table for pretty labels
-    pretty_names <- c(
-      bill_length_mm     = "Bill length (mm)",
-      bill_depth_mm      = "Bill depth (mm)",
-      flipper_length_mm  = "Flipper length (mm)",
-      body_mass_g        = "Body mass (g)"
-    )
-
     # Convert pretty label back to raw variable name
     xvar <- names(pretty_names)[pretty_names == input$xvar]
     yvar <- names(pretty_names)[pretty_names == input$yvar]
@@ -41,8 +43,9 @@ app_server <- function(input, output, session) {
     p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
       labs(
-        x = input$xvar,   # pretty label
-        y = input$yvar    # pretty label
+        x = input$xvar,
+        y = input$yvar,
+        color = "Species"
       ) +
       theme_bw(base_size = 16)
 
@@ -55,9 +58,13 @@ app_server <- function(input, output, session) {
 
   # ---- Summary table ----
   output$summary <- renderTable({
-    penguins_filtered() |>
+    df <- penguins_filtered() |>
+      dplyr::select(-year) |>   # hide year
       dplyr::group_by(species) |>
       dplyr::summarise(dplyr::across(where(is.numeric), mean, na.rm = TRUE))
+
+    names(df) <- dplyr::recode(names(df), !!!pretty_names)
+    df
   })
 
   # ---- Species profile image ----
@@ -69,9 +76,13 @@ app_server <- function(input, output, session) {
 
   # ---- Species profile stats ----
   output$profile_stats <- renderTable({
-    penguins |>
+    df <- penguins |>
       dplyr::filter(species == input$species_profile) |>
+      dplyr::select(-year) |>   # hide year
       dplyr::summarise(dplyr::across(where(is.numeric), mean, na.rm = TRUE))
+
+    names(df) <- dplyr::recode(names(df), !!!pretty_names)
+    df
   })
 
   # ---- Regression ----
@@ -81,7 +92,10 @@ app_server <- function(input, output, session) {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
-    lm_formula <- as.formula(paste(input$reg_y, "~", input$reg_x))
+    reg_x <- names(pretty_names)[pretty_names == input$reg_x]
+    reg_y <- names(pretty_names)[pretty_names == input$reg_y]
+
+    lm_formula <- as.formula(paste(reg_y, "~", reg_x))
     model <- lm(lm_formula, data = df)
     summary(model)
   })
@@ -93,7 +107,10 @@ app_server <- function(input, output, session) {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
-    cor_val <- cor(df[[input$reg_x]], df[[input$reg_y]], use = "complete.obs")
+    reg_x <- names(pretty_names)[pretty_names == input$reg_x]
+    reg_y <- names(pretty_names)[pretty_names == input$reg_y]
+
+    cor_val <- cor(df[[reg_x]], df[[reg_y]], use = "complete.obs")
     paste("Correlation:", round(cor_val, 3))
   })
 }
