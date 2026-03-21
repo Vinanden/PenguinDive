@@ -20,11 +20,9 @@ app_server <- function(input, output, session) {
     body_mass_g        = "Body mass (g)"
   )
 
-  pretty_names <- c(
-    species = "Species",
-    axis_labels
-  )
+  pretty_names <- c(species = "Species",axis_labels)
 
+  # About page
   output$about_text <- renderUI({
     HTML("
     <h4>Purpose</h4>
@@ -93,6 +91,17 @@ app_server <- function(input, output, session) {
     tags$img(src = penguin_image, width = "100%")
   })
 
+  # Spescies profile table
+  output$profile_stats <- renderTable({
+    df <- penguins |>
+      dplyr::select(-year) |>
+      dplyr::group_by(species) |>
+      dplyr::summarise(dplyr::across(where(is.numeric), mean, na.rm = TRUE))
+
+    names(df) <- dplyr::recode(names(df), !!!pretty_names)
+    df
+  })
+
   # Reactive filtered data for Explorer
   penguins_filtered <- reactive({
     if (input$species == "All") penguins
@@ -113,8 +122,6 @@ app_server <- function(input, output, session) {
 
     xvar <- input$xvar
     yvar <- input$yvar
-
-    df$Species <- df$species
 
     p <- ggplot(df, aes_string(xvar, yvar, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
@@ -139,17 +146,6 @@ app_server <- function(input, output, session) {
     plotly::ggplotly(p, tooltip = c("species", xvar, yvar))
   })
 
-  # Spescies profile table
-  output$profile_stats <- renderTable({
-    df <- penguins |>
-      dplyr::select(-year) |>
-      dplyr::group_by(species) |>
-      dplyr::summarise(dplyr::across(where(is.numeric), mean, na.rm = TRUE))
-
-    names(df) <- dplyr::recode(names(df), !!!pretty_names)
-    df
-  })
-
   # Regression plot
   output$reg_plot <- plotly::renderPlotly({
     df <- penguins
@@ -159,7 +155,7 @@ app_server <- function(input, output, session) {
 
     p <- ggplot(df, aes_string(input$reg_x, input$reg_y, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
-      geom_smooth(method = "lm", se = TRUE, color = "grey20", linewidth = 1.2) +
+      geom_smooth(method = "lm", se = TRUE, color = "grey20", linewidth = 1.2, aes(text = NULL)) +
       scale_color_manual(
         values = c(
           "Chinstrap" = "#8E5BA6",
@@ -174,9 +170,7 @@ app_server <- function(input, output, session) {
       ) +
       theme_bw(base_size = 16)
 
-    plotly::ggplotly(p, tooltip = c("species", input$reg_x, input$reg_y)) |>
-      plotly::style(hoverinfo = "skip", traces = 1) |>   # hide regression line
-      plotly::style(hoverinfo = "skip", traces = 2)      # hide confidence band
+    plotly::ggplotly(p, tooltip = c("species", input$reg_x, input$reg_y))
   })
 
   # Regression summary (with guard clause)
