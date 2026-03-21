@@ -29,4 +29,5 @@ Imports:
     ggplot2,
     dplyr,
     stats,
-    htmltools
+    htmltools,
+    tidyr

@@ -83,10 +83,10 @@ app_ui <- function() {
         layout_columns(
           col_widths = c(6, 6),
 
-          # Left: regression plot
+          # Left: regression plot (interactive)
           card(
             h3("Regression plot"),
-            plotOutput("reg_plot")
+            plotlyOutput("reg_plot")
           ),
 
           # Right: regression summary + correlation
@@ -96,6 +96,27 @@ app_ui <- function() {
             h3("Correlation"),
             textOutput("correlation")
           )
+        ),
+
+        # Diagnostics row
+        layout_columns(
+          col_widths = c(6, 6),
+
+          card(
+            h3("Residuals vs Fitted"),
+            plotOutput("reg_residuals")
+          ),
+
+          card(
+            h3("QQ Plot"),
+            plotOutput("reg_qq")
+          )
+        ),
+
+        # Correlation heatmap
+        card(
+          h3("Correlation heatmap"),
+          plotOutput("cor_heatmap")
         )
       )
     )
