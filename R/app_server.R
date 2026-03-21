@@ -143,7 +143,7 @@ app_server <- function(input, output, session) {
       p <- p + facet_wrap(as.formula(paste("~", input$facet)))
     }
 
-    plotly::ggplotly(p, tooltip = c("species", xvar, yvar))
+    plotly::ggplotly(p, tooltip = c(xvar, yvar))
   })
 
   # Regression plot
@@ -155,7 +155,7 @@ app_server <- function(input, output, session) {
 
     p <- ggplot(df, aes_string(input$reg_x, input$reg_y, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
-      geom_smooth(method = "lm", se = TRUE, color = "grey20", linewidth = 1.2, aes(text = NULL)) +
+      geom_smooth(method = "lm", se = TRUE, color = "grey20", linewidth = 1.2) +
       scale_color_manual(
         values = c(
           "Chinstrap" = "#8E5BA6",
@@ -170,7 +170,7 @@ app_server <- function(input, output, session) {
       ) +
       theme_bw(base_size = 16)
 
-    plotly::ggplotly(p, tooltip = c("species", input$reg_x, input$reg_y))
+    plotly::ggplotly(p, tooltip = c(input$reg_x, input$reg_y))
   })
 
   # Regression summary (with guard clause)
