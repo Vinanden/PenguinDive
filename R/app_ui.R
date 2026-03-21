@@ -87,16 +87,16 @@ app_ui <- function() {
           )
         ),
 
+        # Full-width regression plot
+        card(
+          h3("Regression plot"),
+          plotlyOutput("reg_plot", height = "450px")
+        ),
+
+        # Summary + correlation in two columns
         layout_columns(
           col_widths = c(6, 6),
 
-          # Left: regression plot (interactive)
-          card(
-            h3("Regression plot"),
-            plotlyOutput("reg_plot")
-          ),
-
-          # Right: regression summary + correlation
           card(
             h3("Regression summary"),
             tableOutput("reg_summary"),
@@ -105,7 +105,7 @@ app_ui <- function() {
           )
         ),
 
-        # NEW: within-species correlation heatmap
+        # Within-species correlation heatmap
         card(
           h3("Within-species correlation heatmap"),
           plotOutput("cor_heatmap")

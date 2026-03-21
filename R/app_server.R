@@ -116,15 +116,32 @@ app_server <- function(input, output, session) {
     plotly::ggplotly(p, tooltip = c("species", input$reg_x, input$reg_y))
   })
 
-  # Regression summary table
   output$reg_summary <- renderTable({
     df <- penguins
     if (input$reg_species != "All") {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
+    # Guard: need at least 3 rows and variation in both variables
+    if (nrow(df) < 3 ||
+        length(unique(df[[input$reg_x]])) < 2 ||
+        length(unique(df[[input$reg_y]])) < 2) {
+      return(data.frame(
+        Term = "Model error",
+        Value = "Not enough variation to fit regression"
+      ))
+    }
+
     model <- lm(as.formula(paste(input$reg_y, "~", input$reg_x)), data = df)
     s <- summary(model)
+
+    # Guard: slope may not exist
+    if (nrow(s$coefficients) < 2) {
+      return(data.frame(
+        Term = "Model error",
+        Value = "Regression model has no slope term"
+      ))
+    }
 
     data.frame(
       Term = c("Intercept", "Slope", "R-squared", "p-value"),
@@ -177,7 +194,7 @@ app_server <- function(input, output, session) {
 
     ggplot(corr_df, aes(Var1, Var2, fill = value)) +
       geom_tile() +
-      scale_fill_gradient2(low = "blue2", mid = "purple2", high = "red2") +
+      scale_fill_gradient2(low = "black", mid = "blue2", high = "red2") +
       theme_bw(base_size = 14) +
       labs(
         x = "",
