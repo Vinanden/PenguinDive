@@ -77,7 +77,14 @@ app_ui <- function() {
         sidebar = sidebar(
           selectInput("reg_species", "Species", choices = species_choices),
           selectInput("reg_x", "Predictor (X)", choices = numeric_choices),
-          selectInput("reg_y", "Response (Y)", choices = numeric_choices)
+          selectInput("reg_y", "Response (Y)", choices = numeric_choices),
+
+          # NEW: species selector for within-species heatmap
+          selectInput(
+            "heatmap_species",
+            "Species for heatmap",
+            choices = species_choices[species_choices != "All"]
+          )
         ),
 
         layout_columns(
@@ -98,9 +105,9 @@ app_ui <- function() {
           )
         ),
 
-        # Correlation heatmap
+        # NEW: within-species correlation heatmap
         card(
-          h3("Correlation heatmap"),
+          h3("Within-species correlation heatmap"),
           plotOutput("cor_heatmap")
         )
       )

@@ -150,7 +150,19 @@ app_server <- function(input, output, session) {
 
   # Correlation heatmap
   output$cor_heatmap <- renderPlot({
-    df <- penguins |> dplyr::select(where(is.numeric), -year)
+    req(input$heatmap_species)
+
+    df <- penguins |>
+      dplyr::filter(species == input$heatmap_species) |>
+      dplyr::select(where(is.numeric), -year)
+
+    # Not enough data? Show a message instead of error
+    if (nrow(df) < 3) {
+      plot.new()
+      text(0.5, 0.5, "Not enough data for this species")
+      return()
+    }
+
     corr <- cor(df, use = "complete.obs")
 
     corr_df <- as.data.frame(corr)
@@ -165,8 +177,13 @@ app_server <- function(input, output, session) {
 
     ggplot(corr_df, aes(Var1, Var2, fill = value)) +
       geom_tile() +
-      scale_fill_gradient2(low = "#8E5BA6", mid = "white", high = "#3BB6A0") +
+      scale_fill_gradient2(low = "blue2", mid = "purple2", high = "red2") +
       theme_bw(base_size = 14) +
-      labs(x = "", y = "", fill = "Correlation")
+      labs(
+        x = "",
+        y = "",
+        fill = "Correlation",
+        title = paste("Correlations for", input$heatmap_species)
+      )
   })
 }
