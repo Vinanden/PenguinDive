@@ -34,7 +34,27 @@ app_ui <- function() {
   page_navbar(
     title = "Palmer Penguins Dashboard",
 
-# Explorer
+    # Species Profiles
+    nav_panel(
+      "Species Profiles",
+      layout_columns(
+        col_widths = c(4, 8),
+
+        # Left column: image
+        card(
+          h3("Species"),
+          uiOutput("penguin_image")
+        ),
+
+        # Right column: table
+        card(
+          h3("Mean measurements by species"),
+          tableOutput("profile_stats")
+        )
+      )
+    ),
+
+    # Explorer
     nav_panel(
       "Explorer",
       layout_sidebar(
@@ -50,28 +70,7 @@ app_ui <- function() {
       )
     ),
 
-# Species Profiles
-nav_panel(
-  "Species Profiles",
-  layout_columns(
-    col_widths = c(4, 8),
-
-    # Left column: image
-    card(
-      h3("Species"),
-      uiOutput("penguin_image")
-    ),
-
-    # Right column: table
-    card(
-      h3("Mean measurements by species"),
-      tableOutput("profile_stats")
-    )
-  )
-),
-
-
-# Statistics
+    # Statistics
     nav_panel(
       "Statistics",
       layout_sidebar(
@@ -80,13 +79,24 @@ nav_panel(
           selectInput("reg_x", "Predictor (X)", choices = numeric_choices),
           selectInput("reg_y", "Response (Y)", choices = numeric_choices)
         ),
-        card(
-          h3("Regression results"),
-          verbatimTextOutput("regression"),
-          h3("Correlation"),
-          textOutput("correlation")
+
+        layout_columns(
+          col_widths = c(6, 6),
+
+          # Left: regression plot
+          card(
+            h3("Regression plot"),
+            plotOutput("reg_plot")
+          ),
+
+          # Right: regression summary + correlation
+          card(
+            h3("Regression summary"),
+            tableOutput("reg_summary"),
+            h3("Correlation"),
+            textOutput("correlation")
+          )
         )
       )
     )
-  )
 }

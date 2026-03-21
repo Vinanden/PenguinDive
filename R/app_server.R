@@ -88,32 +88,52 @@ app_server <- function(input, output, session) {
     df
   })
 
-# Regression
-  output$regression <- renderPrint({
+  # Regression plot
+  output$reg_plot <- renderPlot({
     df <- penguins
     if (input$reg_species != "All") {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
-    reg_x <- input$reg_x
-    reg_y <- input$reg_y
-
-    lm_formula <- as.formula(paste(reg_y, "~", reg_x))
-    model <- lm(lm_formula, data = df)
-    summary(model)
+    ggplot(df, aes_string(input$reg_x, input$reg_y)) +
+      geom_point(alpha = 0.7, size = 3) +
+      geom_smooth(method = "lm", se = TRUE, color = "black") +
+      labs(
+        x = axis_labels[[input$reg_x]],
+        y = axis_labels[[input$reg_y]]
+      ) +
+      theme_bw(base_size = 16)
   })
 
-# Correlation
+  # Regression summary table
+  output$reg_summary <- renderTable({
+    df <- penguins
+    if (input$reg_species != "All") {
+      df <- dplyr::filter(df, species == input$reg_species)
+    }
+
+    model <- lm(as.formula(paste(input$reg_y, "~", input$reg_x)), data = df)
+    s <- summary(model)
+
+    data.frame(
+      Term = c("Intercept", "Slope", "R-squared", "p-value"),
+      Value = c(
+        round(s$coefficients[1, 1], 3),
+        round(s$coefficients[2, 1], 3),
+        round(s$r.squared, 3),
+        signif(s$coefficients[2, 4], 3)
+      )
+    )
+  })
+
+  # Correlation
   output$correlation <- renderText({
     df <- penguins
     if (input$reg_species != "All") {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
-    reg_x <- input$reg_x
-    reg_y <- input$reg_y
-
-    cor_val <- cor(df[[reg_x]], df[[reg_y]], use = "complete.obs")
+    cor_val <- cor(df[[input$reg_x]], df[[input$reg_y]], use = "complete.obs")
     paste("Correlation:", round(cor_val, 3))
   })
 }
