@@ -98,21 +98,6 @@ app_ui <- function() {
           )
         ),
 
-        # Diagnostics row
-        layout_columns(
-          col_widths = c(6, 6),
-
-          card(
-            h3("Residuals vs Fitted"),
-            plotOutput("reg_residuals")
-          ),
-
-          card(
-            h3("QQ Plot"),
-            plotOutput("reg_qq")
-          )
-        ),
-
         # Correlation heatmap
         card(
           h3("Correlation heatmap"),

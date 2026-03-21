@@ -148,28 +148,6 @@ app_server <- function(input, output, session) {
     paste("Correlation:", round(cor_val, 3))
   })
 
-  # Residuals vs Fitted
-  output$reg_residuals <- renderPlot({
-    df <- penguins
-    if (input$reg_species != "All") {
-      df <- dplyr::filter(df, species == input$reg_species)
-    }
-
-    model <- lm(as.formula(paste(input$reg_y, "~", input$reg_x)), data = df)
-    plot(model, which = 1)
-  })
-
-  # QQ plot
-  output$reg_qq <- renderPlot({
-    df <- penguins
-    if (input$reg_species != "All") {
-      df <- dplyr::filter(df, species == input$reg_species)
-    }
-
-    model <- lm(as.formula(paste(input$reg_y, "~", input$reg_x)), data = df)
-    plot(model, which = 2)
-  })
-
   # Correlation heatmap
   output$cor_heatmap <- renderPlot({
     df <- penguins |> dplyr::select(where(is.numeric))
