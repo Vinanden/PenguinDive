@@ -70,21 +70,14 @@ app_ui <- function() {
       )
     ),
 
-    # Statistics
+    # Regression Analysis
     nav_panel(
-      "Statistics",
+      "Regression",
       layout_sidebar(
         sidebar = sidebar(
           selectInput("reg_species", "Species", choices = species_choices),
           selectInput("reg_x", "Predictor (X)", choices = numeric_choices),
-          selectInput("reg_y", "Response (Y)", choices = numeric_choices),
-
-          # NEW: species selector for within-species heatmap
-          selectInput(
-            "heatmap_species",
-            "Species for heatmap",
-            choices = species_choices[species_choices != "All"]
-          )
+          selectInput("reg_y", "Response (Y)", choices = numeric_choices)
         ),
 
         # Full-width regression plot
@@ -93,22 +86,34 @@ app_ui <- function() {
           plotlyOutput("reg_plot", height = "450px")
         ),
 
-        # Summary + correlation in two columns
+        # Summary + correlation
         layout_columns(
           col_widths = c(6, 6),
-
           card(
             h3("Regression summary"),
             tableOutput("reg_summary"),
             h3("Correlation"),
             textOutput("correlation")
           )
+        )
+      )
+    ),
+
+    # Correlation Heatmap
+    nav_panel(
+      "Correlations",
+      layout_sidebar(
+        sidebar = sidebar(
+          selectInput(
+            "heatmap_species",
+            "Species for heatmap",
+            choices = species_choices[species_choices != "All"]
+          )
         ),
 
-        # Within-species correlation heatmap
         card(
           h3("Within-species correlation heatmap"),
-          plotOutput("cor_heatmap")
+          plotOutput("cor_heatmap", height = "500px")
         )
       )
     )

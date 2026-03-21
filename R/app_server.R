@@ -10,7 +10,6 @@
 app_server <- function(input, output, session) {
 
   penguins <- PenguinDive::penguins
-
   theme_set(theme_bw(base_size = 16))
 
   # Pretty labels for renaming columns and axes (server)
@@ -32,13 +31,13 @@ app_server <- function(input, output, session) {
     tags$img(src = penguin_image, width = "100%")
   })
 
-  # Reactive filtered data
+  # Reactive filtered data for Explorer
   penguins_filtered <- reactive({
     if (input$species == "All") penguins
     else penguins |> dplyr::filter(species == input$species)
   })
 
-  # Scatterplot (interactive)
+  # Explorer scatterplot
   output$scatter <- plotly::renderPlotly({
     df <- penguins_filtered()
 
@@ -78,7 +77,7 @@ app_server <- function(input, output, session) {
     plotly::ggplotly(p, tooltip = c("Species", xvar, yvar))
   })
 
-  # Species profile stats
+  # Spescies profile table
   output$profile_stats <- renderTable({
     df <- penguins |>
       dplyr::select(-year) |>
@@ -89,7 +88,7 @@ app_server <- function(input, output, session) {
     df
   })
 
-  # Interactive regression plot with species colors
+  # Regression plot
   output$reg_plot <- plotly::renderPlotly({
     df <- penguins
     if (input$reg_species != "All") {
@@ -116,13 +115,14 @@ app_server <- function(input, output, session) {
     plotly::ggplotly(p, tooltip = c("species", input$reg_x, input$reg_y))
   })
 
+  # Regression summary (with guard clause)
   output$reg_summary <- renderTable({
     df <- penguins
     if (input$reg_species != "All") {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
-    # Guard: need at least 3 rows and variation in both variables
+    # Guard: need variation
     if (nrow(df) < 3 ||
         length(unique(df[[input$reg_x]])) < 2 ||
         length(unique(df[[input$reg_y]])) < 2) {
@@ -154,18 +154,23 @@ app_server <- function(input, output, session) {
     )
   })
 
-  # Correlation
+  # Correlation text (with guard)
   output$correlation <- renderText({
     df <- penguins
     if (input$reg_species != "All") {
       df <- dplyr::filter(df, species == input$reg_species)
     }
 
+    if (length(unique(df[[input$reg_x]])) < 2 ||
+        length(unique(df[[input$reg_y]])) < 2) {
+      return("Not enough variation to compute correlation")
+    }
+
     cor_val <- cor(df[[input$reg_x]], df[[input$reg_y]], use = "complete.obs")
     paste("Correlation:", round(cor_val, 3))
   })
 
-  # Correlation heatmap
+  # Correlation page
   output$cor_heatmap <- renderPlot({
     req(input$heatmap_species)
 
@@ -173,7 +178,6 @@ app_server <- function(input, output, session) {
       dplyr::filter(species == input$heatmap_species) |>
       dplyr::select(where(is.numeric), -year)
 
-    # Not enough data? Show a message instead of error
     if (nrow(df) < 3) {
       plot.new()
       text(0.5, 0.5, "Not enough data for this species")
@@ -194,7 +198,7 @@ app_server <- function(input, output, session) {
 
     ggplot(corr_df, aes(Var1, Var2, fill = value)) +
       geom_tile() +
-      scale_fill_gradient2(low = "black", mid = "blue2", high = "red2") +
+      scale_fill_gradient2(low = "#3BB6A0", mid = "white", high = "#8E5BA6") +
       theme_bw(base_size = 14) +
       labs(
         x = "",
