@@ -9,13 +9,13 @@ exploration.
 
 ## Installation
 
-You can install the development version of PenguinDive like so:
+Install the development version of PenguinDive like this:
 
 ``` r
 # install.packages("pak")
 # pak::pak("Vinanden/PenguinDive")
 
-# or
+# or:
 
 # install.packages("remotes")
 # remotes::install_github("Vinanden/PenguinDive")
@@ -23,7 +23,7 @@ You can install the development version of PenguinDive like so:
 
 ## Launching
 
-You can launch the PenguinDive app with:
+Launch the PenguinDive app with:
 
 ``` r
 library(PenguinDive)

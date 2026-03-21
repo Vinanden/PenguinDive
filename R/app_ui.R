@@ -32,9 +32,9 @@ app_ui <- function() {
   )
 
   page_navbar(
-    title = "Dive into the Palmer Penguins Dataset",
+    title = "Palmer Penguins Dashboard",
 
-    # Instructions / About Page
+    # Instructions/About Page
     nav_panel(
       "About",
       card(

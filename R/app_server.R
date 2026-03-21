@@ -27,12 +27,23 @@ app_server <- function(input, output, session) {
 
   output$about_text <- renderUI({
     HTML("
+    <h3>Purpose of This Dashboard</h3>
+    <p>
+      This dashboard is designed to help users dive into the Palmer penguins dataset,
+      aimed at teaching basic statistical concepts and ecological data exploration.
+      Here you can look at morphological differences among penguin species,
+      understand trait relationships, and visualize ecological patterns
+      in a clean, intuitive interface.
+    </p>
+
     <h3>Palmer Penguins Dataset</h3>
     <p>
       This dashboard uses the <strong>Palmer Penguins</strong> dataset, collected by
       Dr. Kristen Gorman and the Palmer Station Long-Term Ecological Research Program
-      in Antarctica. It contains measurements of three penguin species:
-      <em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em>.
+      in Antarctica. It contains measurements of three penguin species
+      - <em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em> - collected from
+      three islands - <em>Biscoe</em>, <em>Dream</em>, and <em>Torgersen</em> -
+      in the Palmer Archipelago:
     </p>
 
     <ul>
@@ -72,13 +83,6 @@ app_server <- function(input, output, session) {
       This means correlations are calculated <em>only</em> within the selected species,
       avoiding misleading pooled effects. Darker colors indicate stronger relationships
       between traits.
-    </p>
-
-    <h3>Purpose of This Dashboard</h3>
-    <p>
-      This dashboard is designed to help users to explore morphological differences among
-      penguin species, understand trait relationships, and visualize ecological patterns
-      in a clean, intuitive interface.
     </p>
   ")
   })
@@ -132,7 +136,7 @@ app_server <- function(input, output, session) {
       p <- p + facet_wrap(as.formula(paste("~", input$facet)))
     }
 
-    plotly::ggplotly(p, tooltip = c("Species", xvar, yvar))
+    plotly::ggplotly(p, tooltip = c("species", xvar, yvar))
   })
 
   # Spescies profile table

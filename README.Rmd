@@ -21,13 +21,13 @@ The goal of PenguinDive is to dive into the Palmer penguins dataset,
 
 ## Installation
 
-You can install the development version of PenguinDive like so:
+Install the development version of PenguinDive like this:
 
 ```{r, eval=FALSE}
 # install.packages("pak")
 # pak::pak("Vinanden/PenguinDive")
 
-# or
+# or:
 
 # install.packages("remotes")
 # remotes::install_github("Vinanden/PenguinDive")
@@ -35,7 +35,7 @@ You can install the development version of PenguinDive like so:
 
 ## Launching
 
-You can launch the PenguinDive app with:
+Launch the PenguinDive app with:
 
 ```{r example, eval=FALSE}
 library(PenguinDive)
