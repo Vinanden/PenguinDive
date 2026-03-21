@@ -150,7 +150,7 @@ app_server <- function(input, output, session) {
 
   # Correlation heatmap
   output$cor_heatmap <- renderPlot({
-    df <- penguins |> dplyr::select(where(is.numeric))
+    df <- penguins |> dplyr::select(where(is.numeric), -year)
     corr <- cor(df, use = "complete.obs")
 
     corr_df <- as.data.frame(corr)
