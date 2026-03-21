@@ -80,15 +80,16 @@ app_ui <- function() {
           selectInput("reg_y", "Response (Y)", choices = numeric_choices)
         ),
 
-        # Full-width regression plot
-        card(
-          h3("Regression plot"),
-          plotlyOutput("reg_plot", height = "450px")
-        ),
-
-        # Summary + correlation
         layout_columns(
-          col_widths = c(6, 6),
+          col_widths = c(8, 4),
+
+          # Left: regression plot
+          card(
+            h3("Regression plot"),
+            plotlyOutput("reg_plot", height = "500px")
+          ),
+
+          # Right: summary + correlation
           card(
             h3("Regression summary"),
             tableOutput("reg_summary"),

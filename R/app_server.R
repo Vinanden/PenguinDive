@@ -97,7 +97,7 @@ app_server <- function(input, output, session) {
 
     p <- ggplot(df, aes_string(input$reg_x, input$reg_y, color = "species")) +
       geom_point(size = 3, alpha = 0.8) +
-      geom_smooth(method = "lm", se = TRUE) +
+      geom_smooth(method = "lm", se = TRUE, color = "grey20", linewidth = 1.2) +
       scale_color_manual(
         values = c(
           "Chinstrap" = "#8E5BA6",
@@ -198,7 +198,7 @@ app_server <- function(input, output, session) {
 
     ggplot(corr_df, aes(Var1, Var2, fill = value)) +
       geom_tile() +
-      scale_fill_gradient2(low = "#3BB6A0", mid = "white", high = "#8E5BA6") +
+      scale_fill_viridis_c(option = "C", direction = 1) +
       theme_bw(base_size = 14) +
       labs(
         x = "",
