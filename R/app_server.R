@@ -27,7 +27,7 @@ app_server <- function(input, output, session) {
 
   output$about_text <- renderUI({
     HTML("
-    <h3>Purpose of This Dashboard</h3>
+    <h4>Purpose</h4>
     <p>
       This dashboard is designed to help users dive into the Palmer penguins dataset,
       aimed at teaching basic statistical concepts and ecological data exploration.
@@ -36,13 +36,13 @@ app_server <- function(input, output, session) {
       in a clean, intuitive interface.
     </p>
 
-    <h3>Palmer Penguins Dataset</h3>
+    <h4>Palmer Penguins Dataset</h4>
     <p>
       This dashboard uses the <strong>Palmer Penguins</strong> dataset, collected by
       Dr. Kristen Gorman and the Palmer Station Long-Term Ecological Research Program
       in Antarctica. It contains measurements of three penguin species
-      - <em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em> - collected from
-      three islands - <em>Biscoe</em>, <em>Dream</em>, and <em>Torgersen</em> -
+      — <em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em> — collected from
+      three islands — <em>Biscoe</em>, <em>Dream</em>, and <em>Torgersen</em> —
       in the Palmer Archipelago:
     </p>
 
@@ -54,7 +54,7 @@ app_server <- function(input, output, session) {
       <li><strong>Sex</strong> and <strong>Island</strong></li>
     </ul>
 
-    <h3>How to Use the Explorer Page</h3>
+    <h4>How to Use the Explorer Page</h4>
     <p>
       The Explorer page lets you create interactive scatterplots to examine relationships
       between penguin traits. You can:
@@ -66,7 +66,7 @@ app_server <- function(input, output, session) {
       <li>Hover over points to see exact values</li>
     </ul>
 
-    <h3>Regression Page</h3>
+    <h4>Regression Page</h4>
     <p>
       The Regression page fits a linear model between two variables. You can:
     </p>
@@ -77,11 +77,11 @@ app_server <- function(input, output, session) {
       <li>See the model summary: intercept, slope, R-squared, and p-value</li>
     </ul>
 
-    <h3>Correlation Heatmap</h3>
+    <h4>Correlation Heatmap</h4>
     <p>
       The Correlations page shows a <strong>within-species</strong> correlation heatmap.
       This means correlations are calculated <em>only</em> within the selected species,
-      avoiding misleading pooled effects. Darker colors indicate stronger relationships
+      avoiding misleading pooled effects. Warmer colors indicate stronger relationships
       between traits.
     </p>
   ")
@@ -174,7 +174,9 @@ app_server <- function(input, output, session) {
       ) +
       theme_bw(base_size = 16)
 
-    plotly::ggplotly(p, tooltip = c("species", input$reg_x, input$reg_y))
+    plotly::ggplotly(p, tooltip = c("species", input$reg_x, input$reg_y)) |>
+      plotly::style(hoverinfo = "skip", traces = 1) |>   # hide regression line
+      plotly::style(hoverinfo = "skip", traces = 2)      # hide confidence band
   })
 
   # Regression summary (with guard clause)
