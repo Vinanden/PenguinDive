@@ -25,6 +25,64 @@ app_server <- function(input, output, session) {
     axis_labels
   )
 
+  output$about_text <- renderUI({
+    HTML("
+    <h3>Palmer Penguins Dataset</h3>
+    <p>
+      This dashboard uses the <strong>Palmer Penguins</strong> dataset, collected by
+      Dr. Kristen Gorman and the Palmer Station Long-Term Ecological Research Program
+      in Antarctica. It contains measurements of three penguin species:
+      <em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em>.
+    </p>
+
+    <ul>
+      <li><strong>Bill length (mm)</strong></li>
+      <li><strong>Bill depth (mm)</strong></li>
+      <li><strong>Flipper length (mm)</strong></li>
+      <li><strong>Body mass (g)</strong></li>
+      <li><strong>Sex</strong> and <strong>Island</strong></li>
+    </ul>
+
+    <h3>How to Use the Explorer Page</h3>
+    <p>
+      The Explorer page lets you create interactive scatterplots to examine relationships
+      between penguin traits. You can:
+    </p>
+    <ul>
+      <li>Select a <strong>species</strong> or view all species together</li>
+      <li>Choose any numeric variable for the <strong>X</strong> and <strong>Y</strong> axes</li>
+      <li>Optionally <strong>facet</strong> the plot by island or sex</li>
+      <li>Hover over points to see exact values</li>
+    </ul>
+
+    <h3>Regression Page</h3>
+    <p>
+      The Regression page fits a linear model between two variables. You can:
+    </p>
+    <ul>
+      <li>Choose a species (or all species combined)</li>
+      <li>Select predictor and response variables</li>
+      <li>View the regression line and confidence interval</li>
+      <li>See the model summary: intercept, slope, R-squared, and p-value</li>
+    </ul>
+
+    <h3>Correlation Heatmap</h3>
+    <p>
+      The Correlations page shows a <strong>within-species</strong> correlation heatmap.
+      This means correlations are calculated <em>only</em> within the selected species,
+      avoiding misleading pooled effects. Darker colors indicate stronger relationships
+      between traits.
+    </p>
+
+    <h3>Purpose of This Dashboard</h3>
+    <p>
+      This dashboard is designed to help users to explore morphological differences among
+      penguin species, understand trait relationships, and visualize ecological patterns
+      in a clean, intuitive interface.
+    </p>
+  ")
+  })
+
   # Penguin image
   penguin_image <- "https://allisonhorst.github.io/palmerpenguins/reference/figures/lter_penguins.png"
   output$penguin_image <- renderUI({
@@ -149,7 +207,7 @@ app_server <- function(input, output, session) {
         round(s$coefficients[1, 1], 3),
         round(s$coefficients[2, 1], 3),
         round(s$r.squared, 3),
-        signif(s$coefficients[2, 4], 3)
+        formatC(s$coefficients[2, 4], format = "e", digits = 2)
       )
     )
   })
@@ -170,7 +228,6 @@ app_server <- function(input, output, session) {
     paste("Correlation:", round(cor_val, 3))
   })
 
-  # Correlation page
   output$cor_heatmap <- renderPlot({
     req(input$heatmap_species)
 
@@ -184,11 +241,14 @@ app_server <- function(input, output, session) {
       return()
     }
 
+    # Compute correlation matrix
     corr <- cor(df, use = "complete.obs")
 
+    # Convert to data frame
     corr_df <- as.data.frame(corr)
     corr_df$Var1 <- rownames(corr_df)
 
+    # Pivot longer
     corr_df <- tidyr::pivot_longer(
       corr_df,
       cols = -Var1,
@@ -196,9 +256,13 @@ app_server <- function(input, output, session) {
       values_to = "value"
     )
 
+    # Apply pretty labels
+    corr_df$Var1 <- axis_labels[corr_df$Var1]
+    corr_df$Var2 <- axis_labels[corr_df$Var2]
+
     ggplot(corr_df, aes(Var1, Var2, fill = value)) +
       geom_tile() +
-      scale_fill_viridis_c(option = "C", direction = 1) +
+      scale_fill_viridis_c(option = "C", direction = 1) +   # better scale
       theme_bw(base_size = 14) +
       labs(
         x = "",
