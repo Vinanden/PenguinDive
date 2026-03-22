@@ -268,7 +268,7 @@ app_server <- function(input, output, session) {
       scale_fill_viridis_c(
         option = "C",
         direction = 1,
-        limits = c(0.4, 1.0),
+        limits = c(0, 1.0),
         oob = scales::squish
       ) +
       theme_bw(base_size = 14) +
