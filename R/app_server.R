@@ -1,10 +1,13 @@
+utils::globalVariables(c("Var1", "Var2", "value", "species", "year"))
+
 #' Application server logic
 #'
-#' @importFrom stats as.formula cor lm
+#' @importFrom stats as.formula cor lm setNames
 #' @importFrom dplyr filter group_by summarise across where recode select
-#' @importFrom shiny renderUI renderTable renderPrint renderText reactive
-#' @importFrom htmltools tags
+#' @importFrom shiny renderUI renderTable renderPrint renderText reactive req renderPlot
+#' @importFrom htmltools tags HTML
 #' @importFrom tidyr pivot_longer
+#' @importFrom graphics plot.new text
 #' @import ggplot2
 #' @noRd
 app_server <- function(input, output, session) {
@@ -39,8 +42,8 @@ app_server <- function(input, output, session) {
       This dashboard uses the <strong>Palmer Penguins</strong> dataset, collected by
       Dr. Kristen Gorman and the Palmer Station Long-Term Ecological Research Program
       in Antarctica. It contains measurements of three penguin species
-      — <em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em> — collected from
-      three islands — <em>Biscoe</em>, <em>Dream</em>, and <em>Torgersen</em> —
+      - <em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em> - collected from
+      three islands - <em>Biscoe</em>, <em>Dream</em>, and <em>Torgersen</em> -
       in the Palmer Archipelago:
     </p>
 
