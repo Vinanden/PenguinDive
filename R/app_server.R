@@ -42,8 +42,8 @@ app_server <- function(input, output, session) {
       This dashboard uses the <strong>Palmer Penguins</strong> dataset, collected by
       Dr. Kristen Gorman and the Palmer Station Long-Term Ecological Research Program
       in Antarctica. It contains measurements of three penguin species
-      - <em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em> - collected from
-      three islands - <em>Biscoe</em>, <em>Dream</em>, and <em>Torgersen</em> -
+      (<em>Adelie</em>, <em>Chinstrap</em>, and <em>Gentoo</em>) collected from
+      three islands (<em>Biscoe</em>, <em>Dream</em>, and <em>Torgersen</em>)
       in the Palmer Archipelago:
     </p>
 
