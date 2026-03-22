@@ -265,7 +265,12 @@ app_server <- function(input, output, session) {
 
     ggplot(corr_df, aes(Var1, Var2, fill = value)) +
       geom_tile() +
-      scale_fill_viridis_c(option = "C", direction = 1) +   # better scale
+      scale_fill_viridis_c(
+        option = "C",
+        direction = 1,
+        limits = c(0.4, 1.0),
+        oob = scales::squish
+      ) +
       theme_bw(base_size = 14) +
       labs(
         x = "",
